@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -64,4 +63,15 @@ public class GetPromiseHistoryByOrderIdActivityTest {
                    )
         );
     }
+
+    @Test
+    public void getPromiseHistoryByOrderId_nullOrderWithValidId_doesntRaiseError() {
+        // GIVEN
+        String orderId = "900-0000000-0000000";
+
+        // WHEN + THEN
+        activity.getPromiseHistoryByOrderId(orderId);
+    }
+
+
 }

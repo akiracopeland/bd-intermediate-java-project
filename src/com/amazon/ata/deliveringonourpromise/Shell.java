@@ -65,7 +65,6 @@ public class Shell {
         {
             do
             {
-                //FIXME: code exits with java.lang.NullPointerException for order ID 111-749023-7630574
                 System.out.println(shell.handleUserRequest());
             } while (shell.userHasAnotherRequest());
         } catch (Exception e)
@@ -91,9 +90,11 @@ public class Shell {
         } while ("".equals(response));
 
         PromiseHistory promiseHistory = promiseHistoryClient.getPromiseHistoryByOrderId(response);
+
         if (promiseHistory.getOrder() == null) {
             return String.format(UNKNOWN_ORDER_MESSAGE, response);
         }
+
         return renderOrderTable(promiseHistory.getOrder()) + renderPromiseHistoryTable(promiseHistory);
     }
 
