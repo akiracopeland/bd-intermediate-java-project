@@ -39,3 +39,16 @@ Happy case, verifying that the OrderDao can return an order.
 
 ### Then
 * The result is not null
+
+
+### get_forNonExistentOrderId_returnsNull
+Happy case, verifying that the OrderDao returns a null order when no order can be found for the provided orderId.
+
+#### Given
+* An order ID that is valid but does not have existing order
+
+#### When
+1. We call `get()` with that order ID
+
+### Then
+* The result should be null.
