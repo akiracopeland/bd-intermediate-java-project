@@ -1,0 +1,210 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class GetPromiseHistoryByOrderIdActivity {
+    - ReadOnlyDao<String, Order> orderDao
+    - ReadOnlyDao<String, List<Promise>> promiseDao
+
+    + GetPromiseHistoryByOrderIdActivity(ReadOnlyDao<String, Order> orderDao, ReadOnlyDao<String, List<Promise>> promiseDao)
+    + PromiseHistory getPromiseHistoryByOrderId(String orderId)
+}
+
+class OrderDao {
+    - OrderManipulationAuthorityClient omaClient
+
+    + OrderDao(OrderManipulationAuthorityClient client)
+    + Order get(String orderId)
+    - OrderItem convertToOrderItem(OrderResultItem orderResultItem)
+}
+
+class PromiseDao {
+    - DeliveryPromiseServiceClient dpsClient
+    - OrderManipulationAuthorityClient omaClient
+
+    + PromiseDao(DeliveryPromiseServiceClient dpsClient, OrderManipulationAuthorityClient omaClient)
+    + List<Promise> get(String customerOrderItemId)
+    - ZonedDateTime getDeliveryDateForOrderItem(String customerOrderItemId)
+}
+
+interface ReadOnlyDao<I, O> {
+    + O get(I orderId)
+}
+
+class DeliveryPromiseServiceClient {
+    - DeliveryPromiseService dpService
+
+    + DeliveryPromiseServiceClient(DeliveryPromiseService dpService)
+    + Promise getDeliveryPromiseByOrderItemId(String customerOrderItemId)
+}
+
+class OrderManipulationAuthorityClient {
+    - OrderManipulationAuthority omaService
+
+    + OrderManipulationAuthorityClient(OrderManipulationAuthority service)
+    + OrderResult getCustomerOrderByOrderId(String orderId)
+    + OrderResultItem getCustomerOrderItemByOrderItemId(String orderItemId)
+}
+
+class PromiseHistoryClient {
+    - GetPromiseHistoryByOrderIdActivity getPromiseHistoryByOrderIdActivity
+
+    + PromiseHistoryClient(GetPromiseHistoryByOrderIdActivity getPromiseHistoryByOrderIdActivity)
+    + PromiseHistory getPromiseHistoryByOrderId(String orderId)
+}
+
+class Order {
+    - String orderId
+    - String customerId
+    - String marketplaceId
+    - OrderCondition condition
+    - List<OrderItem> customerOrderItemList
+    - String shipOption
+    - ZonedDateTime orderDate
+
+    + String getOrderId()
+    + String getCustomerId()
+    + String getMarketplaceId()
+    + OrderCondition getCondition()
+    + List<OrderItem> getCustomerOrderItemList()
+    + String getShipOption()
+    + ZonedDateTime getOrderDate()
+    + static Builder builder()
+
+    + String toString()
+}
+
+class OrderItem {
+    - String customerOrderItemId
+    - String orderId
+    - String asin
+    - String merchantId
+    - int quantity
+    - String title
+    - boolean isConfidenceTracked
+    - int confidence
+
+    + String getCustomerOrderItemId()
+    + String getOrderId()
+    + String getAsin()
+    + String getMerchantId()
+    + int getQuantity()
+    + String getTitle()
+    + boolean isConfidenceTracked()
+    + int getConfidence()
+    + static Builder builder()
+    + boolean equals(Object o)
+    + int hashCode()
+    + String toString()
+}
+
+class Promise {
+    - String customerOrderItemId
+    - String asin
+    - boolean active
+    - ZonedDateTime promiseEffectiveDate
+    - ZonedDateTime promiseLatestArrivalDate
+    - ZonedDateTime promiseLatestShipDate
+    - ZonedDateTime deliveryDate
+    - String promiseProvidedBy
+    - int confidence
+
+    + String getCustomerOrderItemId()
+    + String getAsin()
+    + boolean isActive()
+    + ZonedDateTime getPromiseEffectiveDate()
+    + ZonedDateTime getPromiseLatestArrivalDate()
+    + ZonedDateTime getPromiseLatestShipDate()
+    + ZonedDateTime getDeliveryDate()
+    + String getPromiseProvidedBy()
+    + int getConfidence()
+    + void setConfidence(boolean isConfidenceTracked, int trackedConfidence)
+    + void setDeliveryDate(ZonedDateTime deliveryDate)
+    + String toString()
+    + static Builder builder()
+}
+
+class PromiseHistory {
+    - Order order
+    - List<Promise> promises
+
+    + PromiseHistory(Order order)
+    + Order getOrder()
+    + void addPromise(Promise newPromise)
+    + List<Promise> getPromises()
+}
+
+class App {
+    + static PromiseHistoryClient getPromiseHistoryClient()
+    + static GetPromiseHistoryByOrderIdActivity getPromiseHistoryByOrderIdActivity()
+    + static OrderDao getOrderDao()
+    + static PromiseDao getPromiseDao()
+    + static OrderManipulationAuthorityClient getOrderManipulationAuthorityClient()
+    + static DeliveryPromiseServiceClient getDeliveryPromiseServiceClient()
+    + static OrderManipulationAuthority getOrderManipulationAuthority()
+    + static DeliveryPromiseService getDeliveryPromiseService()
+    + static OrderDatastore getOrderDatastore()
+}
+
+class Shell {
+    - static final String SHOW_FIXTURES_FLAG
+    - static final String CONTINUE_PROMPT
+    - static final Collection<String> VALID_YES_NO_ANSWERS
+    - static final String ORDER_ID_PROMPT
+    - static final String UNKNOWN_ORDER_MESSAGE
+    - static final String INLINE_PROMPT
+
+    - PromiseHistoryClient promiseHistoryClient
+    - ATAUserHandler inputHandler
+
+    + Shell(PromiseHistoryClient promiseHistoryClient, ATAUserHandler userHandler)
+    + static void main(String[] args)
+    + String handleUserRequest()
+    + String renderPromiseHistoryTable(PromiseHistory promiseHistory)
+    + String renderOrderTable(Order order)
+    + boolean userHasAnotherRequest()
+    - void processCommandLineArgs(String[] args)
+    - String renderFixtures()
+}
+
+GetPromiseHistoryByOrderIdActivity --> PromiseDao
+GetPromiseHistoryByOrderIdActivity --> PromiseHistory
+GetPromiseHistoryByOrderIdActivity --> OrderDao
+GetPromiseHistoryByOrderIdActivity --> ReadOnlyDao
+
+OrderDao --> Order
+OrderDao --> OrderItem
+OrderDao --> OrderManipulationAuthorityClient
+OrderDao ..|> ReadOnlyDao
+
+PromiseDao ..|> ReadOnlyDao
+PromiseDao --> DeliveryPromiseServiceClient
+PromiseDao --> OrderManipulationAuthorityClient
+
+DeliveryPromiseServiceClient --> Promise
+DeliveryPromiseServiceClient --> DeliveryPromiseService
+
+OrderManipulationAuthorityClient --> OrderResult
+OrderManipulationAuthorityClient --> OrderResultItem
+OrderManipulationAuthorityClient --> OrderManipulationAuthority
+
+PromiseHistoryClient --> PromiseHistory
+PromiseHistoryClient --> GetPromiseHistoryByOrderIdActivity
+
+PromiseHistory --> Order
+PromiseHistory --> Promise
+
+Order --> OrderItem
+
+Shell --> PromiseHistoryClient
+
+App --> PromiseHistoryClient : creates
+App --> GetPromiseHistoryByOrderIdActivity : creates
+App --> OrderDao : creates
+App --> PromiseDao : creates
+App --> OrderManipulationAuthorityClient : creates
+App --> DeliveryPromiseServiceClient : creates
+App --> OrderManipulationAuthority : creates
+App --> DeliveryPromiseService : creates
+App --> OrderDatastore : uses
+
+@enduml
