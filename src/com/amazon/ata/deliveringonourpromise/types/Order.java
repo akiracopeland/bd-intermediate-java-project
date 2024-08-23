@@ -4,7 +4,6 @@ import com.amazon.ata.ordermanipulationauthority.OrderCondition;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -62,7 +61,9 @@ public class Order {
         return marketplaceId;
     }
 
-    public OrderCondition getCondition() { return condition;}
+    public OrderCondition getCondition() {
+        return condition;
+    }
 
     /**
      * Returns a list containing all of the order items in this order.
