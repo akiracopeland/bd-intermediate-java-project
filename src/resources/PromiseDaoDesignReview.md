@@ -10,15 +10,17 @@ What's the problem with the way the PromiseDao currently works?
 
 What ways will the CS representatives use the new multiple-client PromiseDao?
 
-- 
+- To retrieve the promises from OFS and other services
 
 In a few sentences, how does the PromiseDao work right now?
 
-- 
+- It returns a list of all promises associated with the given order Item ID. It has a private method to retrieve the delivery date of those orders.
 
 Consider a developer unfamiliar with the Missed Promise CLI. Can you add diagrams here that will help them understand how the PromiseDao works right now?
 
-- 
+- OrderManipulationAuthorityClient --delivery date-->  PromiseDao
+- DeliveryPromiseServiceClient --promises--> PromiseDao
+- Creates and returns a list containing the promises and its delivery dates.
 
 ## Proposed Solution
 
