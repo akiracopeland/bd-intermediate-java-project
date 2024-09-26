@@ -1,7 +1,4 @@
 package com.amazon.ata.deliveringonourpromise.ordermanipulationauthority;
-
-import com.amazon.ata.deliveringonourpromise.PromiseClient;
-import com.amazon.ata.deliveringonourpromise.types.Promise;
 import com.amazon.ata.ordermanipulationauthority.OrderManipulationAuthority;
 import com.amazon.ata.ordermanipulationauthority.OrderResult;
 import com.amazon.ata.ordermanipulationauthority.OrderResultItem;
