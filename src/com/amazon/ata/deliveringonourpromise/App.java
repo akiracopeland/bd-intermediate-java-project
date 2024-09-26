@@ -41,6 +41,20 @@ public class App {
     public static OrderDao getOrderDao() {
         return new OrderDao(getOrderManipulationAuthorityClient());
     }
+
+    /**
+     * Returns an instance of {@link PromiseDao} initialized with the necessary promise clients.
+     *
+     * This method constructs a {@link PromiseDao} by gathering a list of {@link PromiseClient} instances,
+     * including the {@link DeliveryPromiseServiceClient}, {@link OrderFulfillmentServiceClient}, and
+     * {@link OrderManipulationAuthorityClient}. The returned {@link PromiseDao} can be used to access
+     * and retrieve promises from multiple sources.
+     *
+     * @return a fully initialized {@link PromiseDao} object, with the {@link DeliveryPromiseServiceClient},
+     *         {@link OrderFulfillmentServiceClient}, and {@link OrderManipulationAuthorityClient} set up
+     *         as promise clients.
+     */
+
     public static PromiseDao getPromiseDao() {
 
         List<PromiseClient> promiseClients = Arrays.asList(getDeliveryPromiseServiceClient(),

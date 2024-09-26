@@ -1,19 +1,15 @@
 package com.amazon.ata.deliveringonourpromise.dao;
 
 import com.amazon.ata.deliveringonourpromise.PromiseClient;
-import com.amazon.ata.deliveringonourpromise.comparators.PromiseAsinComparator;
-import com.amazon.ata.deliveringonourpromise.deliverypromiseservice.DeliveryPromiseServiceClient;
-import com.amazon.ata.deliveringonourpromise.orderfulfillmentservice.OrderFulfillmentServiceClient;
+
 import com.amazon.ata.deliveringonourpromise.ordermanipulationauthority.OrderManipulationAuthorityClient;
 import com.amazon.ata.deliveringonourpromise.types.Promise;
-import com.amazon.ata.orderfulfillmentservice.OrderPromise;
 import com.amazon.ata.ordermanipulationauthority.OrderResult;
 import com.amazon.ata.ordermanipulationauthority.OrderResultItem;
 import com.amazon.ata.ordermanipulationauthority.OrderShipment;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,7 +21,8 @@ public class PromiseDao implements ReadOnlyDao<String, List<Promise>> {
 
     /**
      * PromiseDao constructor, accepting service clients for DPS, OFS and OMA.
-
+     * @param promiseClients - list of clients, currently DPS and OFS
+     * @param omaClient - instantiating oma client object.
      */
     public PromiseDao(List<PromiseClient> promiseClients, OrderManipulationAuthorityClient omaClient) {
         this.promiseClients = promiseClients;
